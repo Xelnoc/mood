@@ -1,0 +1,15 @@
+/home/xel/Code/csharp/mood/mood/bin/Debug/net6.0/mood
+/home/xel/Code/csharp/mood/mood/bin/Debug/net6.0/mood.deps.json
+/home/xel/Code/csharp/mood/mood/bin/Debug/net6.0/mood.runtimeconfig.json
+/home/xel/Code/csharp/mood/mood/bin/Debug/net6.0/mood.dll
+/home/xel/Code/csharp/mood/mood/bin/Debug/net6.0/mood.pdb
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.csproj.AssemblyReference.cache
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.GeneratedMSBuildEditorConfig.editorconfig
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.AssemblyInfoInputs.cache
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.AssemblyInfo.cs
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.csproj.CoreCompileInputs.cache
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.dll
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/refint/mood.dll
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.pdb
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/mood.genruntimeconfig.cache
+/home/xel/Code/csharp/mood/mood/obj/Debug/net6.0/ref/mood.dll
