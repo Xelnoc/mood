@@ -94,26 +94,4 @@ public class Player
     double distance = Math.Min(Math.Abs(hdistance), Math.Abs(vdistance));
     return distance; 
     }
-    
-    private double Tan(double angle)
-    {
-        double radians = angle * (Math.PI/180);
-        double result = Math.Tan(radians);
-        return result;
-    }
-    
-    private double Sin(double angle)
-    {
-        double radians = angle * (Math.PI/180);
-        double result = Math.Sin(radians);
-        return result;
-    }
-    
-    private double Cos(double angle)
-    {
-        double radians = angle * (Math.PI/180);
-        double result = Math.Cos(radians);
-        return result;
-    }
-    
 }
