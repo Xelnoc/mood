@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Text;
 
 namespace mood;
 
@@ -24,7 +24,8 @@ public static class Program {
     static void Move()
     {
         ConsoleKeyInfo key = Console.ReadKey();
-        double moveStep = 5.0;
+        const double moveStep = 5.0;
+        const int sensitivity = 10;
         double radianDirection = player.Direction * (Math.PI / 180);
 
         switch (key.Key)
@@ -32,10 +33,10 @@ public static class Program {
             case ConsoleKey.Escape:
                 return;
             case ConsoleKey.RightArrow:
-                player.Direction += 10;
+                player.Direction += sensitivity;
                 break;
             case ConsoleKey.LeftArrow:
-                player.Direction -= 10;
+                player.Direction -= sensitivity;
                 break;
             case ConsoleKey.W:
                 player.X += Convert.ToInt32(moveStep * Math.Cos(radianDirection));
@@ -59,53 +60,6 @@ public static class Program {
         player.X = Math.Clamp(player.X, 0, 100);
         player.Y = Math.Clamp(player.Y, 0, 100);
     }
-    
-    /*static void Move()
-    {
-        ConsoleKeyInfo key;
-        key = Console.ReadKey();
-        switch (key.Key)
-        {
-            case ConsoleKey.Escape:
-                return;
-                    
-            case ConsoleKey.RightArrow:
-                player.Direction += 10;
-                break;
-                
-            case ConsoleKey.LeftArrow:
-                player.Direction -= 5;
-                break;
-
-            case ConsoleKey.W:
-                if (player.X <= 95)
-                { 
-                    player.X += 5;
-                }
-                break;
-
-            case ConsoleKey.S:
-                if (player.X >= 5)
-                {
-                    player.X -= 5;
-                }
-                break;
-                
-            case ConsoleKey.A:
-                if (player.Y <= 95)
-                {
-                    player.Y += 5;
-                }
-                break;
-                
-            case ConsoleKey.D:
-                if (player.Y >= 5)
-                {
-                    player.Y -= 5;
-                }
-                break;
-        }
-    }*/
     static bool[,] DrawMap()
     {
         
@@ -162,22 +116,17 @@ public static class Program {
         }
         player.Direction = oldDir;
 
-
-        for (int y = 0; y < screenY ; y++)
+        StringBuilder frame = new StringBuilder();
+        for (int y = 0; y < screenY; y++)
         {
-            for (int x = 0; x < screenX ; x++)
+            for (int x = 0; x < screenX; x++)
             {
-                if (screen[x, y])
-                {
-                    Console.Write("o");
-                }
-                else
-                {
-                    Console.Write(" ");
-                }
+                frame.Append(screen[x, y] ? "█" : " ");
             }
-            Console.WriteLine();
+            frame.AppendLine();
         }
+
+        Console.Write(frame.ToString());
         Console.WriteLine(player.Direction);
     }
 }

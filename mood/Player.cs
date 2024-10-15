@@ -4,7 +4,7 @@ public class Player
 {
     public int X = 5;
     public int Y = 95;
-    public double Direction = 90;
+    public double Direction = 300;
     // public int Health = 100;
     // public string Name = "";
     // public int Level = 1;
