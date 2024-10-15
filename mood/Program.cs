@@ -23,6 +23,45 @@ public static class Program {
 
     static void Move()
     {
+        ConsoleKeyInfo key = Console.ReadKey();
+        double moveStep = 5.0;
+        double radianDirection = player.Direction * (Math.PI / 180);
+
+        switch (key.Key)
+        {
+            case ConsoleKey.Escape:
+                return;
+            case ConsoleKey.RightArrow:
+                player.Direction += 10;
+                break;
+            case ConsoleKey.LeftArrow:
+                player.Direction -= 10;
+                break;
+            case ConsoleKey.W:
+                player.X += Convert.ToInt32(moveStep * Math.Cos(radianDirection));
+                player.Y += Convert.ToInt32(moveStep * Math.Sin(radianDirection));
+                break;
+            case ConsoleKey.S:
+                player.X -= Convert.ToInt32(moveStep * Math.Cos(radianDirection));
+                player.Y -= Convert.ToInt32(moveStep * Math.Sin(radianDirection));
+                break;
+            case ConsoleKey.A:
+                player.X += Convert.ToInt32(moveStep * Math.Sin(radianDirection));
+                player.Y -= Convert.ToInt32(moveStep * Math.Cos(radianDirection));
+                break;
+            case ConsoleKey.D:
+                player.X -= Convert.ToInt32(moveStep * Math.Sin(radianDirection));
+                player.Y += Convert.ToInt32(moveStep * Math.Cos(radianDirection));
+                break;
+        }
+
+        // Ensure the player stays within bounds
+        player.X = Math.Clamp(player.X, 0, 100);
+        player.Y = Math.Clamp(player.Y, 0, 100);
+    }
+    
+    /*static void Move()
+    {
         ConsoleKeyInfo key;
         key = Console.ReadKey();
         switch (key.Key)
@@ -66,7 +105,7 @@ public static class Program {
                 }
                 break;
         }
-    }
+    }*/
     static bool[,] DrawMap()
     {
         

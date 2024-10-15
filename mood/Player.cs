@@ -12,7 +12,7 @@ public class Player
     // public int[,] Items = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }; //item id, item count.
 
     public double CastRay(bool[,] map)
-{
+    {
     double xCalc, yCalc, distCalc, xStep, yStep, xInitial, yInitial, xDiff, yDiff;
 
     // Vertical collision detection
@@ -92,8 +92,8 @@ public class Player
     double hdistance = Math.Truncate(distCalc);
 
     double distance = Math.Min(Math.Abs(hdistance), Math.Abs(vdistance));
-    return distance;
-}
+    return distance; 
+    }
     
     private double Tan(double angle)
     {
