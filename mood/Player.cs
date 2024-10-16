@@ -11,7 +11,7 @@ public class Player
     // public int Xp = 0;
     // public int[,] Items = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }; //item id, item count.
 
-    public double CastRay(bool[,] map)
+    public double CastRay(bool[,] map, double centre)
     {
     double xCalc, yCalc, distCalc, xStep, yStep, xInitial, yInitial, xDiff, yDiff;
 
@@ -91,7 +91,7 @@ public class Player
     distCalc = yDiff / Math.Sin(Direction * (Math.PI / 180));
     double hdistance = Math.Truncate(distCalc);
 
-    double distance = Math.Min(Math.Abs(hdistance), Math.Abs(vdistance));
+    double distance = (Math.Min(Math.Abs(hdistance), Math.Abs(vdistance)))*(Math.Cos((centre - Direction) * (Math.PI / 180)));
     return distance; 
     }
 }

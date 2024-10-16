@@ -6,8 +6,8 @@ public static class Program {
     
     private static Player player = new Player();
     private static ConsoleColor background = ConsoleColor.Gray;
-    private const int fov = 90;
-    private const int wallHeight = 60;
+    private const int fov = 70;
+    private const int wallHeight = 30;
     //screen = 50x20
 
     static void Main()
@@ -84,8 +84,8 @@ public static class Program {
     static void Print(bool[,] map)
     {
         Console.Clear();
-        const int screenX = 256;
-        const int screenY = 40;
+        const int screenX = 350;
+        const int screenY = 60;
         bool[,] screen = new bool[screenX, screenY];
         double oldDir = player.Direction;
         
@@ -94,7 +94,7 @@ public static class Program {
         for (int x = 0; x <= screenX - 1; x++)
         {
             double step = Convert.ToDouble(fov) / Convert.ToDouble(screenX);
-            double distance = player.CastRay(map);
+            double distance = player.CastRay(map, oldDir);
             double halfLine = distance * Math.Tan(0.5 * fov);
             double lineRatio = ((0.5*wallHeight) / halfLine);
 
