@@ -5,20 +5,21 @@ namespace mood;
 public static class Program {
     
     private static Player player = new Player();
-    private static ConsoleColor background = ConsoleColor.Gray;
-    private const int fov = 70;
+    private const int fov = 90;
     private const int wallHeight = 30;
-    //screen = 50x20
+    private const int screenX = 256;
+    private const int screenY = 35;
 
     static void Main()
     {
         bool[,] map = DrawMap();
+        Items.Init();
         do
         {
             Print(map);
             Move();
 
-        } while (true);
+        } while (!player.exit);
     }
 
     static void Move()
@@ -30,7 +31,8 @@ public static class Program {
 
         switch (key.Key)
         {
-            case ConsoleKey.Escape:
+            case ConsoleKey.Q:
+                player.exit = true;
                 return;
             case ConsoleKey.RightArrow:
                 player.Direction += sensitivity;
@@ -54,7 +56,38 @@ public static class Program {
                 player.X -= Convert.ToInt32(moveStep * Math.Sin(radianDirection));
                 player.Y += Convert.ToInt32(moveStep * Math.Cos(radianDirection));
                 break;
+            case ConsoleKey.D0:
+                player.Selected = 9;
+                break;
+            case ConsoleKey.D1:
+                player.Selected = 0;
+                break;
+            case ConsoleKey.D2:
+                player.Selected = 1;
+                break;
+            case ConsoleKey.D3:
+                player.Selected = 2;
+                break;
+            case ConsoleKey.D4:
+                player.Selected = 3;
+                break;
+            case ConsoleKey.D5:
+                player.Selected = 4;
+                break;
+            case ConsoleKey.D6:
+                player.Selected = 5;
+                break;
+            case ConsoleKey.D7:
+                player.Selected = 6;
+                break;
+            case ConsoleKey.D8:
+                player.Selected = 7;
+                break;
+            case ConsoleKey.D9:
+                player.Selected = 8;
+                break;
         }
+        Console.WriteLine(key);
 
         // Ensure the player stays within bounds
         player.X = Math.Clamp(player.X, 0, 100);
@@ -84,20 +117,14 @@ public static class Program {
     static void Print(bool[,] map)
     {
         Console.Clear();
-        const int screenX = 350;
-        const int screenY = 60;
         bool[,] screen = new bool[screenX, screenY];
         double oldDir = player.Direction;
-        
         
         player.Direction -= (fov / 2f);
         for (int x = 0; x <= screenX - 1; x++)
         {
-            double step = Convert.ToDouble(fov) / Convert.ToDouble(screenX);
             double distance = player.CastRay(map, oldDir);
-            double halfLine = distance * Math.Tan(0.5 * fov);
-            double lineRatio = ((0.5*wallHeight) / halfLine);
-
+            double lineRatio = ((0.5*wallHeight) / distance * Math.Tan(0.5 * fov));
             
             for (int y = 0; y <= screenY - 1; y++)
             {
@@ -112,7 +139,7 @@ public static class Program {
                 }
             }
 
-            player.Direction += step;
+            player.Direction += Convert.ToDouble(fov) / Convert.ToDouble(screenX);
         }
         player.Direction = oldDir;
 
@@ -127,6 +154,11 @@ public static class Program {
         }
 
         Console.Write(frame.ToString());
-        Console.WriteLine(player.Direction);
+        Console.WriteLine();
+        Console.WriteLine("██████████");
+        Console.WriteLine("█");
+        Console.WriteLine("█   " + Items.allItems[player.Selected].Name);
+        Console.WriteLine("█");
+        Console.WriteLine("██████████");
     }
 }

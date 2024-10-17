@@ -5,11 +5,12 @@ public class Player
     public int X = 5;
     public int Y = 95;
     public double Direction = 300;
+    public bool exit = false;
     // public int Health = 100;
     // public string Name = "";
     // public int Level = 1;
     // public int Xp = 0;
-    // public int[,] Items = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }; //item id, item count.
+    public int Selected = 0;
 
     public double CastRay(bool[,] map, double centre)
     {
