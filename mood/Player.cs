@@ -95,4 +95,19 @@ public class Player
     double distance = (Math.Min(Math.Abs(hdistance), Math.Abs(vdistance)))*(Math.Cos((centre - Direction) * (Math.PI / 180)));
     return distance; 
     }
+    
+    public string UseItem()
+    {
+        string message = "";
+        switch (Selected)
+        {
+            case 0:
+                message = "";
+                break;
+                
+            
+        }
+
+        return message;
+    }
 }

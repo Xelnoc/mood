@@ -17,13 +17,14 @@ public static class Program {
         do
         {
             Print(map);
-            Move();
+            Console.WriteLine(Move());
 
         } while (!player.exit);
     }
 
-    static void Move()
+    static string Move()
     {
+        string message = "";
         ConsoleKeyInfo key = Console.ReadKey();
         const double moveStep = 5.0;
         const int sensitivity = 10;
@@ -33,7 +34,7 @@ public static class Program {
         {
             case ConsoleKey.Q:
                 player.exit = true;
-                return;
+                break;
             case ConsoleKey.RightArrow:
                 player.Direction += sensitivity;
                 break;
@@ -86,12 +87,14 @@ public static class Program {
             case ConsoleKey.D9:
                 player.Selected = 8;
                 break;
+            case ConsoleKey.Spacebar:
+                message = player.UseItem();
+                break; 
         }
-        Console.WriteLine(key);
-
         // Ensure the player stays within bounds
         player.X = Math.Clamp(player.X, 0, 100);
         player.Y = Math.Clamp(player.Y, 0, 100);
+        return message;
     }
     static bool[,] DrawMap()
     {
