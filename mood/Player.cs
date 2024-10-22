@@ -5,11 +5,12 @@ public class Player
     public int X = 5;
     public int Y = 95;
     public double Direction = 300;
+    public bool exit = false;
     // public int Health = 100;
     // public string Name = "";
     // public int Level = 1;
     // public int Xp = 0;
-    // public int[,] Items = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }; //item id, item count.
+    public int Selected = 0;
 
     public double CastRay(bool[,] map, double centre)
     {
@@ -93,5 +94,20 @@ public class Player
 
     double distance = (Math.Min(Math.Abs(hdistance), Math.Abs(vdistance)))*(Math.Cos((centre - Direction) * (Math.PI / 180)));
     return distance; 
+    }
+    
+    public string UseItem()
+    {
+        string message = "";
+        switch (Selected)
+        {
+            case 0:
+                message = "";
+                break;
+                
+            
+        }
+
+        return message;
     }
 }
