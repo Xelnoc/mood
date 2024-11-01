@@ -13,94 +13,91 @@ public class Player
     public int Selected = 0;
 
     public double CastRay(bool[,] map, double centre)
-{
-    double xCalc, yCalc, distCalc, xStep, yStep, xInitial, yInitial, xDiff, yDiff;
-    bool collided = false;
-
-    // Vertical collision detection
-    xCalc = X + 0.5;
-    yCalc = Y + 0.5;
-    xStep = Math.Cos(Direction * (Math.PI / 180)) > 0 ? 1 : -1;
-    yStep = Math.Tan(Direction * (Math.PI / 180)) * xStep;
-
-    xInitial = xStep / 2;
-    yInitial = Math.Tan(Direction * (Math.PI / 180)) * xInitial;
-    xCalc += xInitial;
-    yCalc += yInitial;
-
-    if (xCalc > map.GetLength(0) - 1) xCalc = map.GetLength(0) - 1;
-    else if (xCalc < 0) xCalc = 0;
-
-    if (yCalc > map.GetLength(1) - 1) yCalc = map.GetLength(1) - 1;
-    else if (yCalc < 0) yCalc = 0;
-
-    if (!map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
     {
-        while (!collided)
+        PrecomputeTrigValues(Direction, out double cosDir, out double sinDir);
+
+        double mapX = X;
+        double mapY = Y;
+        double sideDistX, sideDistY;
+        double deltaDistX = Math.Abs(1 / cosDir);
+        double deltaDistY = Math.Abs(1 / sinDir);
+        double perpWallDist;
+        double stepX, stepY;
+        bool hit = false;
+        int side = 0;
+
+        if (cosDir < 0)
         {
-            xCalc += xStep;
-            yCalc += yStep;
-            if (yCalc <= 0 || yCalc >= map.GetLength(1) - 1 || xCalc < 0 || xCalc >= map.GetLength(0) - 1)
+            stepX = -1;
+            sideDistX = (X - mapX) * deltaDistX;
+        }
+        else
+        {
+            stepX = 1;
+            sideDistX = (mapX + 1.0 - X) * deltaDistX;
+        }
+
+        if (sinDir < 0)
+        {
+            stepY = -1;
+            sideDistY = (Y - mapY) * deltaDistY;
+        }
+        else
+        {
+            stepY = 1;
+            sideDistY = (mapY + 1.0 - Y) * deltaDistY;
+        }
+
+        while (!hit)
+        {
+            if (sideDistX < sideDistY)
             {
-                break;
+                sideDistX += deltaDistX;
+                mapX += stepX;
+                side = 0;
             }
-            else if (map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
+            else
             {
-                collided = true;
+                sideDistY += deltaDistY;
+                mapY += stepY;
+                side = 1;
+            }
+
+            if (mapX < 0 || mapX >= map.GetLength(0) || mapY < 0 || mapY >= map.GetLength(1))
+            {
+                return -1; // Ray goes out of bounds
+            }
+
+            if (map[(int)mapX, (int)mapY])
+            {
+                hit = true;
             }
         }
-    }
-    xDiff = xCalc - X;
-    distCalc = xDiff / Math.Cos(Direction * (Math.PI / 180));
-    double vdistance = collided ? Math.Truncate(distCalc) : double.MaxValue;
 
-    // Horizontal collision detection
-    xCalc = X + 0.5;
-    yCalc = Y + 0.5;
-    yStep = Math.Sin(Direction * (Math.PI / 180)) > 0 ? 1 : -1;
-    xStep = yStep / Math.Tan(Direction * (Math.PI / 180));
-
-    yInitial = yStep / 2;
-    xInitial = yInitial / Math.Tan(Direction * (Math.PI / 180));
-    xCalc += xInitial;
-    yCalc += yInitial;
-
-    if (xCalc > map.GetLength(0) - 1) xCalc = map.GetLength(0) - 1;
-    else if (xCalc < 0) xCalc = 0;
-
-    if (yCalc > map.GetLength(1) - 1) yCalc = map.GetLength(1) - 1;
-    else if (yCalc < 0) yCalc = 0;
-
-    collided = false;
-    if (!map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
-    {
-        while (!collided)
+        if (side == 0)
         {
-            xCalc += xStep;
-            yCalc += yStep;
-            if (yCalc <= 0 || yCalc >= map.GetLength(1) - 1 || xCalc < 0 || xCalc >= map.GetLength(0) - 1)
-            {
-                break;
-            }
-            else if (map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
-            {
-                collided = true;
-            }
+            perpWallDist = (mapX - X + (1 - stepX) / 2) / cosDir;
         }
-    }
-    yDiff = yCalc - Y;
-    distCalc = yDiff / Math.Sin(Direction * (Math.PI / 180));
-    double hdistance = collided ? Math.Truncate(distCalc) : double.MaxValue;
+        else
+        {
+            perpWallDist = (mapY - Y + (1 - stepY) / 2) / sinDir;
+        }
 
-    double distance = Math.Min(Math.Abs(hdistance), Math.Abs(vdistance));
-    if (distance == double.MaxValue)
-    {
-        distance = -1;
+        double distance = perpWallDist;
+        if (distance == double.MaxValue)
+        {
+            distance = -1;
+        }
+        else
+        {
+            distance *= Math.Cos((centre - Direction) * (Math.PI / 180));
+        }
+        return distance;
     }
-    else
+    private static void PrecomputeTrigValues(double direction, out double cosDir, out double sinDir)
     {
-        distance *= Math.Cos((centre - Direction) * (Math.PI / 180));
+        double radianDirection = direction * (Math.PI / 180);
+        cosDir = Math.Cos(radianDirection);
+        sinDir = Math.Sin(radianDirection);
     }
-    return distance;
-}
 }

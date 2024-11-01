@@ -21,12 +21,12 @@ public class Items
         AllItems[9] = new Item("gun", 1);
     }
 
-    public static void Use(int id)
+    public static void Use(int id, bool[,] map)
     {
         switch (id)
         {
             case 1:
-                UseGun();
+                UseGun(map);
                 break;
             case 2:
                 UseKnife();
@@ -38,10 +38,11 @@ public class Items
     }
 
     
-    public static void UseGun()
+    public static void UseGun(bool[,] map)
     {   
         //TODO implement gun 
-        
+        Player player = new Player();
+        double distance = player.CastRay(Program.EnemyMap, player.Direction);
     }
     
     public static void UseKnife()

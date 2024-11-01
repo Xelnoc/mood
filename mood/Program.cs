@@ -8,19 +8,19 @@ public static class Program {
     private static readonly Player player = new Player();
     private const int Fov = 90;
     private const int WallHeight = 30;
-    private const int ScreenX = 256;
-    private const int ScreenY = 35;
+    private const int ScreenX = 300;
+    private const int ScreenY = 45;
     private const int MapX = 100;
     private const int MapY = 100;
+    public static bool[,] WallMap = DrawWallMap();
+    public static bool[,] EnemyMap = DrawWallMap();
 
     static void Main()
     {
-        bool[,] wallMap = DrawWallMap();
-        bool[,] enemyMap = DrawWallMap();
         Items.Init();
         do
         {
-            Print(wallMap);
+            Print();
             Console.WriteLine(Move());
 
         } while (!player.Exit);
@@ -28,7 +28,6 @@ public static class Program {
 
     static string Move()
     {
-        
         string message = "";
         ConsoleKeyInfo key = Console.ReadKey();
         const double moveStep = 5.0;
@@ -93,12 +92,12 @@ public static class Program {
                 player.Selected = 8;
                 break;
             case ConsoleKey.Spacebar:
-                Items.Use(Items.AllItems[player.Selected].Id);
+                Items.Use(Items.AllItems[player.Selected].Id, EnemyMap);
                 break; 
         }
         // Ensure the player stays within bounds
-        player.X = Math.Clamp(player.X, 0, 100);
-        player.Y = Math.Clamp(player.Y, 0, 100);
+        player.X = Math.Clamp(player.X, 0, MapX);
+        player.Y = Math.Clamp(player.Y, 0, MapY);
         return message;
     }
     static bool[,] DrawWallMap()
@@ -134,7 +133,7 @@ public static class Program {
         return map;
     }
 
-    static void Print(bool[,] map)
+    static void Print()
     {
         Console.Clear();
         bool[,] screen = new bool[ScreenX, ScreenY];
@@ -143,7 +142,7 @@ public static class Program {
         player.Direction -= (Fov / 2f);
         for (int x = 0; x <= ScreenX - 1; x++)
         {
-            double distance = player.CastRay(map, oldDir);
+            double distance = player.CastRay(WallMap, oldDir);
             double lineRatio = ((0.5*WallHeight) / distance * Math.Tan(0.5 * Fov));
             
             for (int y = 0; y <= ScreenY - 1; y++)
