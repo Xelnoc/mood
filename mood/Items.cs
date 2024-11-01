@@ -21,12 +21,12 @@ public class Items
         AllItems[9] = new Item("gun", 1);
     }
 
-    public static void Use(int id, bool[,] map)
+    public static void Use(int id)
     {
         switch (id)
         {
             case 1:
-                UseGun(map);
+                UseGun();
                 break;
             case 2:
                 UseKnife();
@@ -38,11 +38,19 @@ public class Items
     }
 
     
-    public static void UseGun(bool[,] map)
+    public static void UseGun()
     {   
         //TODO implement gun 
         Player player = new Player();
         double distance = player.CastRay(Program.EnemyMap, player.Direction);
+        
+        int targetX = player.X + Convert.ToInt32(distance * Math.Cos(player.Direction));
+        int targetY = player.Y + Convert.ToInt32(distance * Math.Sin(player.Direction));
+        if (CheckBlock(targetX, targetY, distance, Program.EnemyMap))
+        {
+            Program.EnemyMap[targetX, targetY] = false;
+        }
+        
     }
     
     public static void UseKnife()
@@ -53,5 +61,15 @@ public class Items
     public static void UseHealthPotion()
     {
         //TODO implement health potion
+    }
+    
+    private static bool CheckBlock(int targetX, int targetY, double distance, bool[,] map)
+    {
+
+        if (targetX >= 0 && targetX < map.GetLength(0) && targetY >= 0 && targetY < map.GetLength(1) && distance >= 0)
+        {
+            return map[targetX, targetY];
+        }
+        return false;
     }
 }
