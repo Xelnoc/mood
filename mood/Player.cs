@@ -5,7 +5,7 @@ public class Player
     public int X = 5;
     public int Y = 95;
     public double Direction = 300;
-    public bool exit = false;
+    public bool Exit = false;
     // public int Health = 100;
     // public string Name = "";
     // public int Level = 1;
@@ -13,8 +13,9 @@ public class Player
     public int Selected = 0;
 
     public double CastRay(bool[,] map, double centre)
-    {
+{
     double xCalc, yCalc, distCalc, xStep, yStep, xInitial, yInitial, xDiff, yDiff;
+    bool collided = false;
 
     // Vertical collision detection
     xCalc = X + 0.5;
@@ -35,14 +36,13 @@ public class Player
 
     if (!map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
     {
-        bool collided = false;
         while (!collided)
         {
             xCalc += xStep;
             yCalc += yStep;
             if (yCalc <= 0 || yCalc >= map.GetLength(1) - 1 || xCalc < 0 || xCalc >= map.GetLength(0) - 1)
             {
-                collided = true;
+                break;
             }
             else if (map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
             {
@@ -52,7 +52,7 @@ public class Player
     }
     xDiff = xCalc - X;
     distCalc = xDiff / Math.Cos(Direction * (Math.PI / 180));
-    double vdistance = Math.Truncate(distCalc);
+    double vdistance = collided ? Math.Truncate(distCalc) : double.MaxValue;
 
     // Horizontal collision detection
     xCalc = X + 0.5;
@@ -71,16 +71,16 @@ public class Player
     if (yCalc > map.GetLength(1) - 1) yCalc = map.GetLength(1) - 1;
     else if (yCalc < 0) yCalc = 0;
 
+    collided = false;
     if (!map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
     {
-        bool collided = false;
         while (!collided)
         {
             xCalc += xStep;
             yCalc += yStep;
             if (yCalc <= 0 || yCalc >= map.GetLength(1) - 1 || xCalc < 0 || xCalc >= map.GetLength(0) - 1)
             {
-                collided = true;
+                break;
             }
             else if (map[Convert.ToInt32(xCalc), Convert.ToInt32(yCalc)])
             {
@@ -90,24 +90,17 @@ public class Player
     }
     yDiff = yCalc - Y;
     distCalc = yDiff / Math.Sin(Direction * (Math.PI / 180));
-    double hdistance = Math.Truncate(distCalc);
+    double hdistance = collided ? Math.Truncate(distCalc) : double.MaxValue;
 
-    double distance = (Math.Min(Math.Abs(hdistance), Math.Abs(vdistance)))*(Math.Cos((centre - Direction) * (Math.PI / 180)));
-    return distance; 
-    }
-    
-    public string UseItem()
+    double distance = Math.Min(Math.Abs(hdistance), Math.Abs(vdistance));
+    if (distance == double.MaxValue)
     {
-        string message = "";
-        switch (Selected)
-        {
-            case 0:
-                message = "";
-                break;
-                
-            
-        }
-
-        return message;
+        distance = -1;
     }
+    else
+    {
+        distance *= Math.Cos((centre - Direction) * (Math.PI / 180));
+    }
+    return distance;
+}
 }

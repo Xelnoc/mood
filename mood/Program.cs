@@ -4,26 +4,31 @@ namespace mood;
 
 public static class Program {
     
-    private static Player player = new Player();
-    private const int fov = 90;
-    private const int wallHeight = 30;
-    private const int screenX = 256;
-    private const int screenY = 35;
+    // ReSharper disable once InconsistentNaming
+    private static readonly Player player = new Player();
+    private const int Fov = 90;
+    private const int WallHeight = 30;
+    private const int ScreenX = 256;
+    private const int ScreenY = 35;
+    private const int MapX = 100;
+    private const int MapY = 100;
 
     static void Main()
     {
-        bool[,] map = DrawMap();
+        bool[,] wallMap = DrawWallMap();
+        bool[,] enemyMap = DrawWallMap();
         Items.Init();
         do
         {
-            Print(map);
+            Print(wallMap);
             Console.WriteLine(Move());
 
-        } while (!player.exit);
+        } while (!player.Exit);
     }
 
     static string Move()
     {
+        
         string message = "";
         ConsoleKeyInfo key = Console.ReadKey();
         const double moveStep = 5.0;
@@ -33,7 +38,7 @@ public static class Program {
         switch (key.Key)
         {
             case ConsoleKey.Q:
-                player.exit = true;
+                player.Exit = true;
                 break;
             case ConsoleKey.RightArrow:
                 player.Direction += sensitivity;
@@ -88,7 +93,7 @@ public static class Program {
                 player.Selected = 8;
                 break;
             case ConsoleKey.Spacebar:
-                message = player.UseItem();
+                Items.Use(Items.AllItems[player.Selected].Id);
                 break; 
         }
         // Ensure the player stays within bounds
@@ -96,16 +101,12 @@ public static class Program {
         player.Y = Math.Clamp(player.Y, 0, 100);
         return message;
     }
-    static bool[,] DrawMap()
+    static bool[,] DrawWallMap()
     {
-        
-        const int mapX = 100;
-        const int mapY = 100;
-        bool[,] map = new bool[mapX, mapY];
-
-        for (int x = 0; x < mapX; x++)
+        bool[,] map = new bool[MapX, MapY];
+        for (int x = 0; x < MapX; x++)
         {
-            for (int y = 0; y < mapY; y++)
+            for (int y = 0; y < MapY; y++)
             {
                 map[x, y] = false;
             }
@@ -116,22 +117,38 @@ public static class Program {
         
         return map;
     }
+    
+    static bool[,] DrawEnemyMap()
+    {
+        bool[,] map = new bool[MapX, MapY];
+        for (int x = 0; x < MapX; x++)
+        {
+            for (int y = 0; y < MapY; y++)
+            {
+                map[x, y] = false;
+            }
+        }
+
+        map[50, 50] = true;
+        
+        return map;
+    }
 
     static void Print(bool[,] map)
     {
         Console.Clear();
-        bool[,] screen = new bool[screenX, screenY];
+        bool[,] screen = new bool[ScreenX, ScreenY];
         double oldDir = player.Direction;
         
-        player.Direction -= (fov / 2f);
-        for (int x = 0; x <= screenX - 1; x++)
+        player.Direction -= (Fov / 2f);
+        for (int x = 0; x <= ScreenX - 1; x++)
         {
             double distance = player.CastRay(map, oldDir);
-            double lineRatio = ((0.5*wallHeight) / distance * Math.Tan(0.5 * fov));
+            double lineRatio = ((0.5*WallHeight) / distance * Math.Tan(0.5 * Fov));
             
-            for (int y = 0; y <= screenY - 1; y++)
+            for (int y = 0; y <= ScreenY - 1; y++)
             {
-                bool valid = (y > (screenY / 2f) - (0.5 * (screenY * lineRatio))) && (y < (screenY / 2f) + (0.5 * (screenY * lineRatio)));
+                bool valid = (y > (ScreenY / 2f) - (0.5 * (ScreenY * lineRatio))) && (y < (ScreenY / 2f) + (0.5 * (ScreenY * lineRatio)));
                 if (valid)
                 {
                     screen[x, y] = true; 
@@ -142,14 +159,14 @@ public static class Program {
                 }
             }
 
-            player.Direction += Convert.ToDouble(fov) / Convert.ToDouble(screenX);
+            player.Direction += Convert.ToDouble(Fov) / Convert.ToDouble(ScreenX);
         }
         player.Direction = oldDir;
 
         StringBuilder frame = new StringBuilder();
-        for (int y = 0; y < screenY; y++)
+        for (int y = 0; y < ScreenY; y++)
         {
-            for (int x = 0; x < screenX; x++)
+            for (int x = 0; x < ScreenX; x++)
             {
                 frame.Append(screen[x, y] ? "█" : " ");
             }
@@ -160,7 +177,7 @@ public static class Program {
         Console.WriteLine();
         Console.WriteLine("██████████");
         Console.WriteLine("█");
-        Console.WriteLine("█   " + Items.allItems[player.Selected].Name);
+        Console.WriteLine("█   " + Items.AllItems[player.Selected].Name);
         Console.WriteLine("█");
         Console.WriteLine("██████████");
     }
